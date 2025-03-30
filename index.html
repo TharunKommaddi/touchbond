@@ -18,8 +18,6 @@
             --error-color: #e74c3c;
             --person-you-color: #e74c3c;
             --person-partner-color: #3498db;
-            --settings-bg: #f0f0f0;
-            --settings-bg-dark: #444;
         }
         
         [data-theme="dark"] {
@@ -35,8 +33,6 @@
             --error-color: #ff6b6b;
             --person-you-color: #ff6b6b;
             --person-partner-color: #74b9ff;
-            --settings-bg: #444;
-            --settings-bg-dark: #222;
         }
         
         body {
@@ -196,86 +192,6 @@
         .theme-toggle:hover .theme-toggle__simple {
             transform: scale(1.1);
         }
-        
-        /* Notification settings */
-        .notification-settings {
-            padding: 10px;
-            margin-top: 15px;
-            background-color: var(--settings-bg);
-            border-radius: 5px;
-            text-align: left;
-            transition: background-color 0.3s;
-        }
-        
-        [data-theme="dark"] .notification-settings {
-            background-color: var(--settings-bg-dark);
-        }
-        
-        .notification-settings h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        
-        .toggle-wrapper {
-            display: flex;
-            align-items: center;
-        }
-        
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-            margin-right: 10px;
-        }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .3s;
-            border-radius: 24px;
-        }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .toggle-slider {
-            background-color: var(--accent-color);
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(24px);
-        }
-        
-        .auto-refresh-container {
-            margin-top: 10px;
-        }
-        
-        #refreshInterval {
-            width: 80px;
-            margin-left: 10px;
-            margin-right: 5px;
-        }
     </style>
 </head>
 <body>
@@ -334,28 +250,6 @@
         <div class="input-group">
             <label for="partnerName">Partner's Name:</label>
             <input type="text" id="partnerName" placeholder="Your partner's name">
-        </div>
-        
-        <div class="notification-settings">
-            <h3>Notification Settings</h3>
-            <div class="toggle-wrapper">
-                <label class="toggle-switch">
-                    <input type="checkbox" id="notificationsEnabled" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-                <span>Enable notifications when your partner thinks of you</span>
-            </div>
-            <div class="auto-refresh-container">
-                <div class="toggle-wrapper">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoRefreshEnabled" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <span>Auto-refresh every</span>
-                    <input type="number" id="refreshInterval" min="10" value="30">
-                    <span>seconds</span>
-                </div>
-            </div>
         </div>
         
         <button onclick="saveSettings()">Save Settings</button>
@@ -433,25 +327,15 @@
             ghToken: '',
             yourName: '',
             partnerName: '',
-            dataFile: 'thinking_data.json',
-            notificationsEnabled: true,
-            autoRefreshEnabled: true,
-            refreshInterval: 30,
-            lastSeen: null
+            dataFile: 'thinking_data.json'
         };
         
         let thinkingData = [];
-        let refreshTimer = null;
         
         // Load saved settings on page load
         window.onload = function() {
             initTheme();
             loadSettings();
-            
-            // Request notification permission
-            if (config.notificationsEnabled) {
-                requestNotificationPermission();
-            }
             
             // Check if we have settings and show appropriate section
             if (config.repoOwner && config.repoName && config.ghToken) {
@@ -460,13 +344,6 @@
             } else {
                 showSetup();
             }
-            
-            // Set up the notification toggle
-            document.getElementById('notificationsEnabled').addEventListener('change', function() {
-                if (this.checked) {
-                    requestNotificationPermission();
-                }
-            });
         };
         
         function loadSettings() {
@@ -475,10 +352,6 @@
             config.ghToken = localStorage.getItem('thinkingApp_ghToken') || '';
             config.yourName = localStorage.getItem('thinkingApp_yourName') || '';
             config.partnerName = localStorage.getItem('thinkingApp_partnerName') || '';
-            config.notificationsEnabled = localStorage.getItem('thinkingApp_notifications') !== 'false';
-            config.autoRefreshEnabled = localStorage.getItem('thinkingApp_autoRefresh') !== 'false';
-            config.refreshInterval = parseInt(localStorage.getItem('thinkingApp_refreshInterval') || '30', 10);
-            config.lastSeen = localStorage.getItem('thinkingApp_lastSeen') || null;
             
             // Update form fields
             document.getElementById('repoOwner').value = config.repoOwner;
@@ -486,9 +359,6 @@
             document.getElementById('ghToken').value = config.ghToken;
             document.getElementById('yourName').value = config.yourName;
             document.getElementById('partnerName').value = config.partnerName;
-            document.getElementById('notificationsEnabled').checked = config.notificationsEnabled;
-            document.getElementById('autoRefreshEnabled').checked = config.autoRefreshEnabled;
-            document.getElementById('refreshInterval').value = config.refreshInterval;
         }
         
         function saveSettings() {
@@ -498,9 +368,6 @@
             config.ghToken = document.getElementById('ghToken').value.trim();
             config.yourName = document.getElementById('yourName').value.trim();
             config.partnerName = document.getElementById('partnerName').value.trim();
-            config.notificationsEnabled = document.getElementById('notificationsEnabled').checked;
-            config.autoRefreshEnabled = document.getElementById('autoRefreshEnabled').checked;
-            config.refreshInterval = parseInt(document.getElementById('refreshInterval').value, 10);
             
             // Validate inputs
             if (!config.repoOwner || !config.repoName || !config.ghToken) {
@@ -515,26 +382,12 @@
                 return;
             }
             
-            // Validate refresh interval
-            if (config.refreshInterval < 10) {
-                config.refreshInterval = 10;
-                document.getElementById('refreshInterval').value = 10;
-            }
-            
             // Save to localStorage
             localStorage.setItem('thinkingApp_repoOwner', config.repoOwner);
             localStorage.setItem('thinkingApp_repoName', config.repoName);
             localStorage.setItem('thinkingApp_ghToken', config.ghToken);
             localStorage.setItem('thinkingApp_yourName', config.yourName);
             localStorage.setItem('thinkingApp_partnerName', config.partnerName);
-            localStorage.setItem('thinkingApp_notifications', config.notificationsEnabled);
-            localStorage.setItem('thinkingApp_autoRefresh', config.autoRefreshEnabled);
-            localStorage.setItem('thinkingApp_refreshInterval', config.refreshInterval);
-            
-            // Request notification permission if enabled
-            if (config.notificationsEnabled) {
-                requestNotificationPermission();
-            }
             
             document.getElementById('setupStatus').textContent = 'Settings saved! Checking repository...';
             document.getElementById('setupStatus').className = 'status';
@@ -549,42 +402,6 @@
                     document.getElementById('setupStatus').textContent = 'Error: ' + error.message;
                     document.getElementById('setupStatus').className = 'status error';
                 });
-        }
-        
-        function requestNotificationPermission() {
-            if (!('Notification' in window)) {
-                console.log('This browser does not support notifications');
-                return;
-            }
-            
-            if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        console.log('Notification permission granted');
-                    }
-                });
-            }
-        }
-        
-        function sendNotification(message) {
-            if (!config.notificationsEnabled) return;
-            
-            if (!('Notification' in window)) {
-                console.log('This browser does not support notifications');
-                return;
-            }
-            
-            if (Notification.permission === 'granted') {
-                const notification = new Notification('Thinking of You ❤️', {
-                    body: message,
-                    icon: 'https://cdn-icons-png.flaticon.com/512/833/833472.png'
-                });
-                
-                notification.onclick = function() {
-                    window.focus();
-                    this.close();
-                };
-            }
         }
         
         async function checkAndInitRepo() {
@@ -749,10 +566,6 @@
             
             try {
                 const { data } = await fetchData();
-                
-                // Check for new partner messages and notify
-                checkForNewMessages(data);
-                
                 thinkingData = data;
                 displayData();
                 
@@ -763,36 +576,6 @@
             } catch (error) {
                 document.getElementById('actionStatus').textContent = 'Error: ' + error.message;
                 document.getElementById('actionStatus').className = 'status error';
-            }
-        }
-        
-        function checkForNewMessages(data) {
-            if (!config.lastSeen) {
-                // First time, just save the latest timestamp
-                if (data.length > 0) {
-                    config.lastSeen = new Date().toISOString();
-                    localStorage.setItem('thinkingApp_lastSeen', config.lastSeen);
-                }
-                return;
-            }
-            
-            // Filter partner's messages that are newer than last seen
-            const partnerMessages = data.filter(entry => 
-                entry.name === config.partnerName && 
-                new Date(entry.timestamp) > new Date(config.lastSeen)
-            );
-            
-            if (partnerMessages.length > 0) {
-                // Notify about new messages
-                if (partnerMessages.length === 1) {
-                    sendNotification(`${config.partnerName} is thinking of you!`);
-                } else {
-                    sendNotification(`${config.partnerName} thought of you ${partnerMessages.length} times recently!`);
-                }
-                
-                // Update last seen
-                config.lastSeen = new Date().toISOString();
-                localStorage.setItem('thinkingApp_lastSeen', config.lastSeen);
             }
         }
         
@@ -821,37 +604,17 @@
             logElement.innerHTML = logHTML;
         }
         
-        function setupAutoRefresh() {
-            // Clear any existing timer
-            if (refreshTimer) {
-                clearInterval(refreshTimer);
-                refreshTimer = null;
-            }
-            
-            // Set up auto-refresh if enabled
-            if (config.autoRefreshEnabled) {
-                refreshTimer = setInterval(() => {
-                    // Only refresh if app section is visible
-                    if (document.getElementById('appSection').style.display !== 'none') {
-                        refreshData();
-                    }
-                }, config.refreshInterval * 1000);
-            }
-        }
-        
         function showApp() {
             document.getElementById('setupSection').style.display = 'none';
             document.getElementById('appSection').style.display = 'block';
             document.getElementById('nameDisplay').textContent = config.yourName;
             document.getElementById('partnerDisplay').textContent = config.partnerName;
-            
-            setupAutoRefresh();
         }
         
         function showSetup() {
             document.getElementById('setupSection').style.display = 'block';
             document.getElementById('appSection').style.display = 'none';
-            
-            // Stop auto-refresh when in setup
-            if (refreshTimer) {
-                clearInterval(refresh
+        }
+    </script>
+</body>
+</html>
