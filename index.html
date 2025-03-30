@@ -86,25 +86,6 @@
             box-shadow: none;
         }
         
-        /* Icon buttons */
-        .icon-button {
-            width: 48px;
-            height: 48px;
-            padding: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        
-        .icon-button.refresh {
-            background-color: #3498db;
-        }
-        
-        .icon-button.settings {
-            background-color: #2ecc71;
-        }
-        
         input, select {
             padding: 10px;
             margin: 5px;
@@ -305,15 +286,8 @@
         <p>Tap the button when you're thinking of <span id="partnerDisplay"></span></p>
         
         <button id="thinkingBtn" onclick="logThinking()">I'm thinking of you</button>
-        
-        <div>
-            <button class="icon-button refresh" onclick="refreshData()" title="Refresh" aria-label="Refresh data">
-                ↻
-            </button>
-            <button class="icon-button settings" onclick="showSetup()" title="Settings" aria-label="Settings">
-                ⚙️
-            </button>
-        </div>
+        <button onclick="refreshData()">Refresh</button>
+        <button onclick="showSetup()">Settings</button>
         
         <p id="actionStatus" class="status"></p>
         
