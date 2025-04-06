@@ -80,7 +80,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbWlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkJDQAghICb0J0gkgJYQWQHoRbIQkQCgxBoKKHVlUcC2oiGBFV0UUO2BnUez2sih2XSyoDMoiKrbKNwuQXfd93/vON3f+98w5c/535sxMJgOAeifPbC6F1QDINOXJo4L9aeMS42ikZ0AHFKABBnDiCRRmVnh4KMBotv69vLsOEMneVUdR65/9f2MKwpRMASPUxmmCFEEmA3AlAJcJFPN5ADCquX3pfHMJRqyTF0qA2KYEp8h...............'); /* Base64 data for texture */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbWlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkJDQAghICb0J0gkgJYQWQHoRbIQkQCgxBoKKHVlUcC2oiGBFV0UUO2BnUez2sih2XSyoDMoiKrbKNwuQXfd93/vON3f+98w5c/535sxMJgOAeifPbC6F1QDINOXJo4L9aeMS42ikZ0AHFKABBnDiCRRmVnh4KMBotv69vLsOEMneVUdR65/9f2MKwpRMASPUxmmCFEEmA3AlAJcJFPN5ADCquX3pfHMJRqyTF0qA2KYEp8h...'); /* Base64 data for texture */
             opacity: 0.2;
             pointer-events: none;
             border-radius: 5px;
@@ -379,6 +379,9 @@
                 }, 500);
             }, 300);
         });
+
+        // Call showLetter when the page loads
+        window.addEventListener('load', showLetter);
     </script>
 </body>
 </html>
