@@ -399,22 +399,22 @@
     </script>
 
     <!-- Google Analytics 4 Tracking Code -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-811819892081"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-YOUR_MEASUREMENT_ID', {
-    'country': 'IN', // Specifically track India
+  gtag('config', 'G-811819892081', {
+    'country': 'IN',
     'page_title': 'Love Letter Page'
   });
 
-  // Custom event to track time spent reading
+  // Track time spent reading
   document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     
-    // Track when the letter is fully read
     document.getElementById('letterContainer').addEventListener('scroll', () => {
       let endTime = new Date();
       let timeSpent = (endTime - startTime) / 1000; // time in seconds
