@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,7 +80,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbWlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkJDQAghICb0J0gkgJYQWQHoRbIQkQCgxBoKKHVlUcC2oiGBFV0UUO2BnUez2sih2XSyoDMoiKrbKNwuQXfd93/vON3f+98w5c/735sxMJgOAeifPbC6F1QDINOXJo4L9eeMS42ikZ0AHFKABBnDiCRRmVnh4KMBotv69vLsOEMneVUdR65/9f2MKwpRMASPUxmmCFEEmA3AlAJcLFPN5ADCquX3pfHMJRqyTF0qA2KYEp8h...'); /* Base64 data for texture */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbWlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkJDQAghICb0J0gkgJYQWQHoRbIQkQCgxBoKKHVlUcC2oiGBFV0UUO2BnUez2sih2XSyoDMoiKrbKNwuQXfd93/vON3f+98w5c/535sxMJgOAeifPbC6F1QDINOXJo4L9aeMS42ikZ0AHFKABBnDiCRRmVnh4KMBotv69vLsOEMneVUdR65/9f2MKwpRMASPUxmmCFEEmA3AlAJcJFPN5ADCquX3pfHMJRqyTF0qA2KYEp8h...'); /* Base64 data for texture */
             opacity: 0.2;
             pointer-events: none;
             border-radius: 5px;
@@ -254,6 +254,35 @@
             letter-spacing: 2px;
         }
 
+        /* Download button styles */
+        .download-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .download-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .download-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
         /* Letter selection styles */
         .letter-selector {
             position: fixed;
@@ -309,6 +338,10 @@
     <div class="letter-overlay" id="letterOverlay0">
        <div class="letter-container" id="letterContainer0">
            <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="0">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
            <div class="letter-content">
                <p><strong>Jayamma,</strong></p>
@@ -336,6 +369,10 @@
     <div class="letter-overlay" id="letterOverlay1">
        <div class="letter-container" id="letterContainer1">
            <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="1">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
            <div class="letter-content">
                <p><strong>My dearest Jayamma,</strong></p>
@@ -361,12 +398,16 @@
            
            <div class="signature"><strong>With all my heart,<br>Your man. Your husband. Your forever.</strong></div>
        </div>
-   </div>
+    </div>
 
-   <!-- Third letter -->
-   <div class="letter-overlay" id="letterOverlay2">
+    <!-- Third letter (currently active) -->
+    <div class="letter-overlay" id="letterOverlay2">
        <div class="letter-container" id="letterContainer2">
            <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="2">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
            <div class="letter-content">
                <p><strong>My Jayamma,</strong></p>
@@ -405,12 +446,16 @@
            
            <div class="signature"><strong>Always yours,<br>Tharun</strong></div>
        </div>
-   </div>
+    </div>
 
-   <!-- Fourth letter -->
-   <div class="letter-overlay" id="letterOverlay3">
+    <!-- Fourth letter -->
+    <div class="letter-overlay" id="letterOverlay3">
        <div class="letter-container" id="letterContainer3">
            <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="3">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
            <div class="letter-content">
                <p><strong>My Jayamma,</strong></p>
@@ -444,12 +489,16 @@
            
            <div class="signature"><strong>Forever yours,<br>Tharun</strong></div>
        </div>
-   </div>
+    </div>
 
-   <!-- Fifth letter -->
-   <div class="letter-overlay" id="letterOverlay4">
+    <!-- Fifth letter -->
+    <div class="letter-overlay" id="letterOverlay4">
        <div class="letter-container" id="letterContainer4">
            <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="4">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
            <div class="letter-content">
                <p><strong>My Jayamma,</strong></p>
@@ -477,9 +526,101 @@
            
            <div class="signature"><strong>Yours in every truth,<br>every dare,<br>and everything in between…<br>Tharun</strong></div>
        </div>
-   </div>
+    </div>
 
     <script>
+        // Function to convert letter to image and download (revised)
+/*function downloadLetterAsImage(letterIndex) {
+    const letterContainer = document.getElementById(`letterContainer${letterIndex}`);
+    
+    // Create a notification element
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.padding = '10px 20px';
+    notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    notification.style.color = 'white';
+    notification.style.borderRadius = '5px';
+    notification.style.zIndex = '2000';
+    notification.textContent = 'Preparing download...';
+    document.body.appendChild(notification);
+    
+    // Use html2canvas to create image
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(script);
+    
+    script.onload = function() {
+        notification.textContent = 'Creating high-quality image...';
+        
+        // Get elements to hide temporarily
+        const closeButton = letterContainer.querySelector('.close-letter');
+        const downloadButton = letterContainer.querySelector('.download-btn');
+        
+        // Store original display values
+        const closeButtonDisplay = closeButton.style.display;
+        const downloadButtonDisplay = downloadButton.style.display;
+        
+        // Hide buttons during capture
+        closeButton.style.display = 'none';
+        downloadButton.style.display = 'none';
+        
+        // Set scale for high DPI (600 DPI equivalent)
+        const scale = 5;  // Higher scale for better quality
+        
+        html2canvas(letterContainer, {
+            scale: scale,
+            logging: false,
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
+            notification.textContent = 'Image created! Starting download...';
+            
+            // Restore buttons
+            closeButton.style.display = closeButtonDisplay;
+            downloadButton.style.display = downloadButtonDisplay;
+            
+            // Get letter title from signature
+            const signature = letterContainer.querySelector('.signature').textContent;
+            const title = `Letter_to_Jayamma_${letterIndex+1}`;
+            
+            // Convert to JPG
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `${title}.jpg`;
+            link.href = imgData;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Update and remove notification
+            notification.textContent = 'Download complete!';
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(notification), 500);
+            }, 2000);
+        }).catch(error => {
+            // Restore buttons even if there's an error
+            closeButton.style.display = closeButtonDisplay;
+            downloadButton.style.display = downloadButtonDisplay;
+            
+            notification.textContent = 'Error creating image. Please try again.';
+            console.error('Error in html2canvas:', error);
+            setTimeout(() => document.body.removeChild(notification), 3000);
+        });
+    };
+    
+    script.onerror = function() {
+        notification.textContent = 'Failed to load required resources. Please try again.';
+        setTimeout(() => document.body.removeChild(notification), 3000);
+    };
+} */
         // Function to show hearts animation
         function showHearts(letterIndex) {
             const container = document.getElementById(`letterContainer${letterIndex}`);
@@ -508,9 +649,12 @@
                     }, 3000);
                 }, i * 300);
             }
+
+
+
         }
 
-        // Function to show a specific letter
+// Function to show a specific letter
         function showLetter(index) {
             // Hide any currently visible letter
             document.querySelectorAll('.letter-overlay').forEach(overlay => {
@@ -591,8 +735,61 @@
             });
         });
         
+        // Add event listeners for all download buttons
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const letterIndex = parseInt(button.getAttribute('data-letter'));
+                downloadLetterAsImage(letterIndex);
+            });
+        });
+        
         // Call startExperience when the page loads
         window.addEventListener('load', startExperience);
+    </script>
+
+    <!-- Google Analytics 4 Tracking Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-811819892081"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-811819892081', {
+        'country': 'IN',
+        'page_title': 'Love Letter Page'
+      });
+
+      // Track time spent reading
+      document.addEventListener('DOMContentLoaded', () => {
+        let startTime = new Date();
+        
+        // Track scroll on all letter containers
+        document.querySelectorAll('.letter-container').forEach(container => {
+          container.addEventListener('scroll', () => {
+            let endTime = new Date();
+            let timeSpent = (endTime - startTime) / 1000; // time in seconds
+            
+            gtag('event', 'letter_read_time', {
+              'event_category': 'Engagement',
+              'event_label': 'Time Spent Reading',
+              'value': timeSpent
+            });
+          });
+        });
+        
+        // Track downloads
+        document.querySelectorAll('.download-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const letterIndex = btn.getAttribute('data-letter');
+            
+            gtag('event', 'letter_download', {
+              'event_category': 'Engagement',
+              'event_label': `Letter ${parseInt(letterIndex) + 1} Download`,
+              'value': 1
+            });
+          });
+        });
+      });
     </script>
 </body>
 </html>
