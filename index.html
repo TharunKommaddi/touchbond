@@ -583,25 +583,102 @@
                     link.click();
                     document.body.removeChild(link);
                     
-                    // Update and remove notification
-                    notification.textContent = 'Download complete!';
-                    setTimeout(() => {
-                        notification.style.opacity = '0';
-                        setTimeout(() => document.body.removeChild(notification), 500);
-                    }, 2000);
-                }).catch(error => {
-                    notification.textContent = 'Error creating image. Please try again.';
-                    console.error('Error in html2canvas:', error);
-                    setTimeout(() => document.body.removeChild(notification), 3000);
-                });
-            };
-            
-            script.onerror = function() {
-                notification.textContent = 'Failed to load required resources. Please try again.';
-                setTimeout(() => document.body.removeChild(notification), 3000);
-            };
-        }
+                    // Update and remo<script>
+        // Function to convert letter to image and download
         
+// Function to convert letter to image and download (revised)
+function downloadLetterAsImage(letterIndex) {
+    const letterContainer = document.getElementById(`letterContainer${letterIndex}`);
+    
+    // Create a notification element
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.padding = '10px 20px';
+    notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    notification.style.color = 'white';
+    notification.style.borderRadius = '5px';
+    notification.style.zIndex = '2000';
+    notification.textContent = 'Preparing download...';
+    document.body.appendChild(notification);
+    
+    // Use html2canvas to create image
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(script);
+    
+    script.onload = function() {
+        notification.textContent = 'Creating high-quality image...';
+        
+        // Get elements to hide temporarily
+        const closeButton = letterContainer.querySelector('.close-letter');
+        const downloadButton = letterContainer.querySelector('.download-btn');
+        
+        // Store original display values
+        const closeButtonDisplay = closeButton.style.display;
+        const downloadButtonDisplay = downloadButton.style.display;
+        
+        // Hide buttons during capture
+        closeButton.style.display = 'none';
+        downloadButton.style.display = 'none';
+        
+        // Set scale for high DPI (600 DPI equivalent)
+        const scale = 5;  // Higher scale for better quality
+        
+        html2canvas(letterContainer, {
+            scale: scale,
+            logging: false,
+            useCORS: true,
+            backgroundColor: null
+        }).then(canvas => {
+            notification.textContent = 'Image created! Starting download...';
+            
+            // Restore buttons
+            closeButton.style.display = closeButtonDisplay;
+            downloadButton.style.display = downloadButtonDisplay;
+            
+            // Get letter title from signature
+            const signature = letterContainer.querySelector('.signature').textContent;
+            const title = `Letter_to_Jayamma_${letterIndex+1}`;
+            
+            // Convert to JPG
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `${title}.jpg`;
+            link.href = imgData;
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Update and remove notification
+            notification.textContent = 'Download complete!';
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(notification), 500);
+            }, 2000);
+        }).catch(error => {
+            // Restore buttons even if there's an error
+            closeButton.style.display = closeButtonDisplay;
+            downloadButton.style.display = downloadButtonDisplay;
+            
+            notification.textContent = 'Error creating image. Please try again.';
+            console.error('Error in html2canvas:', error);
+            setTimeout(() => document.body.removeChild(notification), 3000);
+        });
+    };
+    
+    script.onerror = function() {
+        notification.textContent = 'Failed to load required resources. Please try again.';
+        setTimeout(() => document.body.removeChild(notification), 3000);
+    };
+}
+
         // Function to show hearts animation
         function showHearts(letterIndex) {
             const container = document.getElementById(`letterContainer${letterIndex}`);
