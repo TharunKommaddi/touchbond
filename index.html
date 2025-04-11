@@ -253,6 +253,69 @@
             font-size: 24px;
             letter-spacing: 2px;
         }
+
+        /* Download button styles */
+        .download-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .download-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .download-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Letter selection styles */
+        .letter-selector {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .letter-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .letter-dot.active {
+            background-color: var(--accent-color);
+            transform: scale(1.2);
+        }
+
+        .letter-dot:hover {
+            background-color: rgba(255,255,255,0.8);
+        }
     </style>
 </head>
 <body>
@@ -262,325 +325,143 @@
         <div class="loading-text">For Jayamma...</div>
     </div>
 
-<!--<div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>Jayamma,</strong></p>
-           
-           <p>Please read this slowly, like I'm sitting right in front of you saying every word to you.</p>
-           
-           <p>You don't ever have to go through anything alone — not anymore. I don't care what time it is, where I am, or what I'm doing. If you need me, I'll be there. Morning, night, middle of the damn day — you have me. Every second, every minute, every hour. That's a promise I'll never break.</p>
-           
-           <p>You can shout at me, be mad at me, ignore me, cry to me, even sit on me in silence — and I'll take it all. I won't fight back. I won't walk away. I'll sit right there, quiet, calm, with open arms — just to remind you I'm not going anywhere. Ever.</p>
-           
-           <p>If being your support means letting you pour out all your frustration on me, then I'll take every drop of it. Let me be that space where you can fall apart safely, without judgment, without pressure to hold it together. Let me carry the weight for you — or at least some of it — so you can breathe a little.</p>
-           
-           <p>I know you're tired. Tired of pretending, tired of hurting, tired of everything. And I hate that you're feeling this way. If I could pull that pain out of your chest and hold it myself, I would. A hundred times over. You deserve to feel loved, supported, protected — like someone is fighting for <strong>you</strong> for once.</p>
-           
-           <p>So scold me, hit me with your silence, cry as loud as you need — I'll still be here. Like a rock, like a shadow, like the damn ground if that's what you need. I'll be everything you need until you don't need me anymore — and even then, I'll stay.</p>
-           
-           <p>You're not alone. Not now, not ever again.</p>
-       </div>
-       
-       <div class="signature"><strong>Yours completely,<br>Tharun Kommaddi</strong></div>
-   </div>
-</div> -->
-
- <!--   <div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>My dearest Jayamma,</strong></p>
-           
-           <p>There are moments in life that change everything. For me, one such moment was when you said,  
-           <strong>"Nenu chestha nee pelli oka manchi ammai tho..iddari pellala muddulu mugidiga hpy ga life lead chedduvu😊."</strong></p>
-           
-           <p>You said it softly, maybe even a little confused — but to me, it was the loudest your heart had ever spoken.  
-           That was the moment I knew something shifted inside you. For the first time, you didn't brush my words away. You paused. You thought. You <strong>felt</strong>.</p>
-           
-           <p>You used to tell me to find someone else — someone who could give me a peaceful life. You said I deserved better. But, Jayamma, don't you see? <strong>That better person is you.</strong> You've always been the one.</p>
-           
-           <p>You didn't need to understand everything at once. You just needed to let your heart speak — and you did.</p>
-           
-           <p>And when you finally accepted me — "Thank you for accepting me as your husband," — I swear, time stopped for me. In that moment, I wasn't just happy... I was <strong>complete</strong>.</p>
-           
-           <p>Jayamma, you can cry to me, yell at me, ignore me — I'll stay. Not because I have nowhere else to go, but because <strong>my place is with you.</strong> If you sit on me out of frustration, I'll still be silent, because your presence itself is my peace.</p>
-           
-           <p>You feared love would bring pain. But I'm here to prove love can be your <strong>healing</strong>.</p>
-           
-           <p>From today, and every day forward — I'm not going anywhere. You're not alone anymore.</p>
-       </div>
-       
-       <div class="signature"><strong>With all my heart,<br>Your man. Your husband. Your forever.</strong></div>
-   </div>
+    <!-- Letter selection dots -->
+    <div class="letter-selector" id="letterSelector">
+        <div class="letter-dot active" data-index="0"></div>
+        <div class="letter-dot" data-index="1"></div>
+        <div class="letter-dot" data-index="2"></div>
+        <div class="letter-dot" data-index="3"></div>
+        <div class="letter-dot" data-index="4"></div>
     </div>
 
-
-    -->
-
-
-  <div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>My Jayamma,</strong></p>
+    <!-- First letter -->
+    <div class="letter-overlay" id="letterOverlay0">
+       <div class="letter-container" id="letterContainer0">
+           <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="0">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
-           <p>There's something I've been meaning to ask you… something that's been sitting in my heart for a while now.</p>
+           <div class="letter-content">
+               <p><strong>Jayamma,</strong></p>
+               
+               <p>Please read this slowly, like I'm sitting right in front of you saying every word to you.</p>
+               
+               <p>You don't ever have to go through anything alone — not anymore. I don't care what time it is, where I am, or what I'm doing. If you need me, I'll be there. Morning, night, middle of the damn day — you have me. Every second, every minute, every hour. That's a promise I'll never break.</p>
+               
+               <p>You can shout at me, be mad at me, ignore me, cry to me, even sit on me in silence — and I'll take it all. I won't fight back. I won't walk away. I'll sit right there, quiet, calm, with open arms — just to remind you I'm not going anywhere. Ever.</p>
+               
+               <p>If being your support means letting you pour out all your frustration on me, then I'll take every drop of it. Let me be that space where you can fall apart safely, without judgment, without pressure to hold it together. Let me carry the weight for you — or at least some of it — so you can breathe a little.</p>
+               
+               <p>I know you're tired. Tired of pretending, tired of hurting, tired of everything. And I hate that you're feeling this way. If I could pull that pain out of your chest and hold it myself, I would. A hundred times over. You deserve to feel loved, supported, protected — like someone is fighting for <strong>you</strong> for once.</p>
+               
+               <p>So scold me, hit me with your silence, cry as loud as you need — I'll still be here. Like a rock, like a shadow, like the damn ground if that's what you need. I'll be everything you need until you don't need me anymore — and even then, I'll stay.</p>
+               
+               <p>You're not alone. Not now, not ever again.</p>
+           </div>
            
-           <p>I know we joke, we tease, and we talk about silly things — but between all those laughs and smiles, you've become something so much more to me.</p>
-           
-           <p>When I said,  
-           <strong>"Nenu India ki vachinapudu… aevariki telikunda… neeku oka ring thodagana…"</strong>  
-           I meant every word.</p>
-           
-           <p>It's not just a ring.  
-           It's a promise.  
-           A silent bond.  
-           A memory only you and I will share — without noise, without announcements, without the world watching.</p>
-           
-           <p>It may look like just a simple <strong>fitness ring</strong>...  
-           But for me, it's the start of something real.  
-           No pressure, no expectations — just one tiny moment between us, captured in that ring.</p>
-           
-           <p>Will you wear it for me, Jayamma?  
-           Not as a label or a burden — but as a whisper from my heart to yours, saying,  
-           <strong>"You're mine. I'm yours. And maybe, just maybe, this is our beginning."</strong></p>
-           
-           <p>I don't want grand answers.  
-           I just want that soft smile you always send... and maybe someday, when the world makes space for us, a "yes" that comes with no fear.</p>
-           
-           <p>Until then,  
-           Let this ring be a secret between just us.  
-           Let it be as a secret relationship — in its simplest form.</p>
-           
-           <p><strong>Will you accept this ring, Jayamma?</strong>  
-           Just you and me — nothing else matters.</p>
+           <div class="signature"><strong>Yours completely,<br>Tharun Kommaddi</strong></div>
        </div>
-       
-       <div class="signature"><strong>Always yours,<br>Tharun</strong></div>
-   </div>
     </div>
 
-    
-
-
- <!--   <div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>My Jayamma,</strong></p>
+    <!-- Second letter -->
+    <div class="letter-overlay" id="letterOverlay1">
+       <div class="letter-container" id="letterContainer1">
+           <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="1">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
-           <p>There's something I've been meaning to ask you… something that's been sitting in my heart for a while now.</p>
+           <div class="letter-content">
+               <p><strong>My dearest Jayamma,</strong></p>
+               
+               <p>There are moments in life that change everything. For me, one such moment was when you said,  
+               <strong>"Nenu chestha nee pelli oka manchi ammai tho..iddari pellala muddulu mugidiga hpy ga life lead chedduvu😊."</strong></p>
+               
+               <p>You said it softly, maybe even a little confused — but to me, it was the loudest your heart had ever spoken.  
+               That was the moment I knew something shifted inside you. For the first time, you didn't brush my words away. You paused. You thought. You <strong>felt</strong>.</p>
+               
+               <p>You used to tell me to find someone else — someone who could give me a peaceful life. You said I deserved better. But, Jayamma, don't you see? <strong>That better person is you.</strong> You've always been the one.</p>
+               
+               <p>You didn't need to understand everything at once. You just needed to let your heart speak — and you did.</p>
+               
+               <p>And when you finally accepted me — "Thank you for accepting me as your husband," — I swear, time stopped for me. In that moment, I wasn't just happy... I was <strong>complete</strong>.</p>
+               
+               <p>Jayamma, you can cry to me, yell at me, ignore me — I'll stay. Not because I have nowhere else to go, but because <strong>my place is with you.</strong> If you sit on me out of frustration, I'll still be silent, because your presence itself is my peace.</p>
+               
+               <p>You feared love would bring pain. But I'm here to prove love can be your <strong>healing</strong>.</p>
+               
+               <p>From today, and every day forward — I'm not going anywhere. You're not alone anymore.</p>
+           </div>
            
-           <p>I know we joke, we tease, and we talk about silly things — but between all those laughs and smiles, you've become something so much more to me.</p>
-           
-           <p>When I said, <strong>"Nenu India ki vachinapudu… aevariki telikunda… neeku oka ring thodagana…"</strong> I meant every word.</p>
-           
-           <p>It's not just a ring. It's a promise. A silent bond. A memory only you and I will share — without noise, without announcements, without the world watching.</p>
-           
-           <p>It may look like just a simple <strong>fitness ring</strong>... But for me, it's the start of something real. No pressure, no expectations — just one tiny moment between us, captured in that ring.</p>
-           
-           <p>Will you wear it for me, Jayamma? Not as a label or a burden — but as a whisper from my heart to yours, saying, <strong>"You're mine. I'm yours. And maybe, just maybe, this is our beginning."</strong></p>
-           
-           <p>And now, let me tell you what I'm dreaming of…</p>
-           
-           <p>This October or November, I'll be in India. And when I come — I'll come not empty-handed from house. I'll try to cook something, with my clumsy but sincere hands, in my kitchen. Maybe not perfect, maybe a little burnt — but cooked with pure love, and garnished with all our memories. I'll pack it carefully in a small carrier — not just food, but a piece of my heart — and bring it to you. Quietly. Secretly. Just for you.</p>
-           
-           <p>And when I see you… I don't want noise, I don't want the world. I just want your hand in mine. I want to hold it gently… and slide that small ring onto your finger. I want to look into your eyes — not saying a single word — and feel everything we've built in silence.</p>
-           
-           <p>That moment… Your eyes… my trembling fingers… our shared breath… It'll be our secret, our bond, our little hidden world.</p>
-           
-           <p>I'm not asking for anything big, Jayamma. Just this: Let me have that one moment with you. Let me make that memory with you. And if your heart feels even a small yes… just keep that space in your finger empty, waiting for me.</p>
-           
-           <p>Will you let me place that ring on your hand — and carry our little secret forever?</p>
-           
-           <p>Until then, I'll keep cooking this dream inside me… And loving you — quietly, endlessly.</p>
+           <div class="signature"><strong>With all my heart,<br>Your man. Your husband. Your forever.</strong></div>
        </div>
-       
-       <div class="signature"><strong>Forever yours,<br>Tharun</strong></div>
-   </div>
     </div>
 
-
--->
-
-<!--   <div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>My Jayamma,</strong></p>
+    <!-- Third letter (currently active) -->
+    <div class="letter-overlay" id="letterOverlay2">
+       <div class="letter-container" id="letterContainer2">
+           <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="2">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
-           <p>You said yes… finally. Not to a big question — but to a simple, silly little <em>Truth or Dare</em> game.</p>
+           <div class="letter-content">
+               <p><strong>My Jayamma,</strong></p>
+               
+               <p>There's something I've been meaning to ask you… something that's been sitting in my heart for a while now.</p>
+               
+               <p>I know we joke, we tease, and we talk about silly things — but between all those laughs and smiles, you've become something so much more to me.</p>
+               
+               <p>When I said,  
+               <strong>"Nenu India ki vachinapudu… aevariki telikunda… neeku oka ring thodagana…"</strong>  
+               I meant every word.</p>
+               
+               <p>It's not just a ring.  
+               It's a promise.  
+               A silent bond.  
+               A memory only you and I will share — without noise, without announcements, without the world watching.</p>
+               
+               <p>It may look like just a simple <strong>fitness ring</strong>...  
+               But for me, it's the start of something real.  
+               No pressure, no expectations — just one tiny moment between us, captured in that ring.</p>
+               
+               <p>Will you wear it for me, Jayamma?  
+               Not as a label or a burden — but as a whisper from my heart to yours, saying,  
+               <strong>"You're mine. I'm yours. And maybe, just maybe, this is our beginning."</strong></p>
+               
+               <p>I don't want grand answers.  
+               I just want that soft smile you always send... and maybe someday, when the world makes space for us, a "yes" that comes with no fear.</p>
+               
+               <p>Until then,  
+               Let this ring be a secret between just us.  
+               Let it be as a secret relationship — in its simplest form.</p>
+               
+               <p><strong>Will you accept this ring, Jayamma?</strong>  
+               Just you and me — nothing else matters.</p>
+           </div>
            
-           <p>And yet… it feels like a small victory for my heart. Because when you said "Let's play tomorrow," I didn't just hear fun. I heard <em>"I'm ready to open up a little more."</em> I heard <em>"I trust you enough to play."</em> And Jayamma… that means more to me than you can imagine.</p>
-           
-           <p>Tomorrow, I don't want it to be just a game. I want it to be our little world — filled with laughs, dares, maybe a few shy truths, and a lot of closeness.</p>
-           
-           <p>Maybe you'll skip a question or pretend you didn't hear me (like always!) But even that… is part of your charm. And I'll keep asking, because every answer you give — even in silence — tells me something about your heart.</p>
-           
-           <p>You know what my biggest truth is? <strong>It's you.</strong> It's always been you.</p>
-           
-           <p>If you ever dared me to prove my love, I'd do it — without blinking, without thinking. If you told me to hold your hand in front of the sky and say, <strong>"She's mine,"</strong> I'd do it with all the pride in the world.</p>
-           
-           <p>This isn't just a game to me, Jayamma. It's a doorway — one more step closer to you. To the version of you who feels safe enough to say anything. To the version of us where you don't skip questions, because you know I'll never hurt you with the answers.</p>
-           
-           <p>So tomorrow… let's play. Let's laugh. Let's blush. Let's build a memory that we'll both keep in our hearts.</p>
-           
-           <p>And who knows… Maybe one of my dares will be: <strong>"Look into my eyes for 10 seconds and don't fall in love all over again."</strong></p>
-           
-           <p>I know I will.</p>
+           <div class="signature"><strong>Always yours,<br>Tharun</strong></div>
        </div>
-       
-       <div class="signature"><strong>Yours in every truth,<br>every dare,<br>and everything in between…<br>Tharun</strong></div>
-   </div>
-    </div> -->
+    </div>
 
-    
-
-<!--    <div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
-       <button class="close-letter" id="closeLetter">×</button>
-       
-       <div class="letter-content">
-           <p><strong>Jayamma…</strong></p>
+    <!-- Fourth letter -->
+    <div class="letter-overlay" id="letterOverlay3">
+       <div class="letter-container" id="letterContainer3">
+           <button class="close-letter">×</button>
+           <button class="download-btn" data-letter="3">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
+               Download
+           </button>
            
-           <p>I want to share something honestly — not to embarrass either of us, but just to be transparent with you, like always.</p>
-           
-           <p>Today when I said I had a <em>feeling</em>, and it happened to me about 7 times since we met… I didn't mean it in a bad or lustful way. It wasn't something I tried to do or forced — it just happened, naturally. Without even touching, without thinking in the wrong direction.</p>
-           
-           <p>It happened just because of <em>how much love and emotion</em> I've built up for you. It happened seeing your smile… your way of caring… the bond we've created over time.</p>
-           
-           <p>I know this kind of thing can be misunderstood — and if you felt awkward or upset, I'm really sorry. But I wanted to say clearly: <strong>It wasn't physical — it was emotional.</strong></p>
-           
-           <p>Not every reaction is about the body. Some come purely from the heart — from missing you, feeling close to you, and sometimes… from loving someone so deeply, your body responds without asking.</p>
-           
-           <p>You know me. I've never crossed a limit with you. I never will. Because I respect you more than anything else.</p>
-           
-           <p>I'm telling you this now because I don't want even a single seed of doubt between us. Not now. Not ever.</p>
-           
-           <p>If you feel angry, I accept it. If you feel silent, I'll wait. But just know — I love you with the kind of purity that very few people in this world ever feel.</p>
-           
-           <p>That's all I wanted to say. And only to <strong>you</strong>. Not for fun. Not for jokes. Just truth, from your <strong>Tharun</strong>.</p>
-       </div>
-       
-       <div class="signature"><strong>Your Tharun</strong></div>
-   </div>
-    </div>-->
-    <script>
-        // Function to show hearts animation
-        function showHearts() {
-            const container = document.querySelector(".letter-container");
-            const colors = ["#e74c3c", "#f1a9a0", "#d64541", "#ff7979"];
-            
-            for (let i = 0; i < 15; i++) {
-                const heart = document.createElement("div");
-                heart.className = "heart-animation";
-                heart.textContent = "❤️";
-                heart.style.fontSize = Math.random() * 20 + 10 + "px";
-                heart.style.position = "absolute";
-                heart.style.left = Math.random() * 100 + "%";
-                heart.style.top = Math.random() * 100 + "%";
-                heart.style.zIndex = "5";
-                heart.style.opacity = "0";
-                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-                heart.style.setProperty('--tx', (Math.random() * 100 - 50) + 'px');
-                heart.style.setProperty('--ty', -100 - (Math.random() * 100) + 'px');
-                
-                container.appendChild(heart);
-                
-                setTimeout(() => {
-                    heart.style.animation = "floating-hearts 3s ease-out forwards";
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 3000);
-                }, i * 300);
-            }
-        }
-        
-        // Function to show the letter
-        function showLetter() {
-            // First show initial animation
-            const initialAnimation = document.getElementById("initialAnimation");
-            initialAnimation.style.opacity = "1";
-            
-            setTimeout(() => {
-                initialAnimation.style.opacity = "0";
-                
-                setTimeout(() => {
-                    initialAnimation.style.display = "none";
-                    
-                    // Now show the letter
-                    const letterOverlay = document.getElementById("letterOverlay");
-                    const letterContainer = document.getElementById("letterContainer");
-                    
-                    letterOverlay.style.display = "flex";
-                    
-                    setTimeout(() => {
-                        letterOverlay.style.opacity = "1";
-                        letterContainer.style.transform = "translateY(0)";
-                        letterContainer.style.opacity = "1";
-                        
-                        // Show hearts after letter appears
-                        setTimeout(showHearts, 1000);
-                    }, 100);
-                }, 500);
-            }, 2000);
-        }
-        
-        // Function to close the letter
-        document.getElementById("closeLetter").addEventListener("click", () => {
-            const letterOverlay = document.getElementById("letterOverlay");
-            const letterContainer = document.getElementById("letterContainer");
-            
-            letterContainer.style.transform = "translateY(50px)";
-            letterContainer.style.opacity = "0";
-            
-            setTimeout(() => {
-                letterOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    letterOverlay.style.display = "none";
-                }, 500);
-            }, 300);
-        });
-
-        // Call showLetter when the page loads
-        window.addEventListener('load', showLetter);
-    </script>
-
-    <!-- Google Analytics 4 Tracking Code -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-811819892081"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-811819892081', {
-    'country': 'IN',
-    'page_title': 'Love Letter Page'
-  });
-
-  // Track time spent reading
-  document.addEventListener('DOMContentLoaded', () => {
-    let startTime = new Date();
-    
-    document.getElementById('letterContainer').addEventListener('scroll', () => {
-      let endTime = new Date();
-      let timeSpent = (endTime - startTime) / 1000; // time in seconds
-      
-      gtag('event', 'letter_read_time', {
-        'event_category': 'Engagement',
-        'event_label': 'Time Spent Reading',
-        'value': timeSpent
-      });
-    });
-  });
-</script>
-</body>
-</html>
+           <div class="letter-content">
+               <p><strong>My Jayamma,</strong></p>
+               
+               <p>There's something I've been meaning to ask you… something that's been sitting in my heart for a while now.</p>
+               
+               <p>I know we joke, we tease, and we talk about silly things — but between all those laughs and smiles, you've become something so much more to me.</p>
+               
+               <p>When I said, <strong>"Nenu India ki vachinapudu… a
