@@ -632,5 +632,145 @@
             }
 
 
+    <!-- This adds the missing parts to complete the document -->
+
+        // Function to show a specific letter
+        function showLetter(index) {
+            // Hide any currently visible letter
+            document.querySelectorAll('.letter-overlay').forEach(overlay => {
+                overlay.style.display = 'none';
+                overlay.style.opacity = '0';
+            });
+            
+            // Update active dot
+            document.querySelectorAll('.letter-dot').forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            // Show the selected letter
+            const letterOverlay = document.getElementById(`letterOverlay${index}`);
+            const letterContainer = document.getElementById(`letterContainer${index}`);
+            
+            letterOverlay.style.display = "flex";
+            
+            setTimeout(() => {
+                letterOverlay.style.opacity = "1";
+                letterContainer.style.transform = "translateY(0)";
+                letterContainer.style.opacity = "1";
+                
+                // Show hearts after letter appears
+                setTimeout(() => showHearts(index), 1000);
+            }, 100);
+        }
+        
+        // Function to show initial animation then first letter
+        function startExperience() {
+            // First show initial animation
+            const initialAnimation = document.getElementById("initialAnimation");
+            initialAnimation.style.opacity = "1";
+            
+            setTimeout(() => {
+                initialAnimation.style.opacity = "0";
+                
+                setTimeout(() => {
+                    initialAnimation.style.display = "none";
+                    
+                    // Show letter selector
+                    const letterSelector = document.getElementById("letterSelector");
+                    letterSelector.style.opacity = "1";
+                    
+                    // Show the first letter (index 0)
+                    showLetter(0);
+                }, 500);
+            }, 2000);
+        }
+        
+        // Add event listeners for letter dots
+        document.querySelectorAll('.letter-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.getAttribute('data-index'));
+                showLetter(index);
+            });
+        });
+        
+        // Add event listeners for all close buttons
+        document.querySelectorAll('.close-letter').forEach(button => {
+            button.addEventListener('click', () => {
+                const letterOverlay = button.closest('.letter-overlay');
+                const letterContainer = letterOverlay.querySelector('.letter-container');
+                
+                letterContainer.style.transform = "translateY(50px)";
+                letterContainer.style.opacity = "0";
+                
+                setTimeout(() => {
+                    letterOverlay.style.opacity = "0";
+                    setTimeout(() => {
+                        letterOverlay.style.display = "none";
+                    }, 500);
+                }, 300);
+            });
+        });
+        
+        // Add event listeners for all download buttons
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const letterIndex = parseInt(button.getAttribute('data-letter'));
+                downloadLetterAsImage(letterIndex);
+            });
+        });
+        
+        // Call startExperience when the page loads
+        window.addEventListener('load', startExperience);
     </script>
+
+    <!-- Google Analytics 4 Tracking Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-811819892081"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-811819892081', {
+        'country': 'IN',
+        'page_title': 'Love Letter Page'
+      });
+
+      // Track time spent reading
+      document.addEventListener('DOMContentLoaded', () => {
+        let startTime = new Date();
+        
+        // Track scroll on all letter containers
+        document.querySelectorAll('.letter-container').forEach(container => {
+          container.addEventListener('scroll', () => {
+            let endTime = new Date();
+            let timeSpent = (endTime - startTime) / 1000; // time in seconds
+            
+            gtag('event', 'letter_read_time', {
+              'event_category': 'Engagement',
+              'event_label': 'Time Spent Reading',
+              'value': timeSpent
+            });
+          });
+        });
+        
+        // Track downloads
+        document.querySelectorAll('.download-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const letterIndex = btn.getAttribute('data-letter');
+            
+            gtag('event', 'letter_download', {
+              'event_category': 'Engagement',
+              'event_label': `Letter ${parseInt(letterIndex) + 1} Download`,
+              'value': 1
+            });
+          });
+        });
+      });
+    </script>
+</body>
+</html>
         
