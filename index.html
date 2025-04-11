@@ -310,8 +310,8 @@
     </div>
 
 
-<div class="letter-overlay" id="letterOverlay">
-        <div class="letter-container" id="letterContainer">
+<div class="letter-overlay" id="letterOverlay0">
+        <div class="letter-container" id="letterContainer0">
             <button class="close-letter" id="closeLetter">×</button>
             
             <div class="letter-content">
@@ -351,8 +351,8 @@
     </div>
 
   <!-- Letter overlay -->
-   <div class="letter-overlay" id="letterOverlay">
-       <div class="letter-container" id="letterContainer">
+   <div class="letter-overlay" id="letterOverlay1">
+       <div class="letter-container" id="letterContainer1">
            <button class="close-letter" id="closeLetter">×</button>
            
            <div class="letter-content">
@@ -449,8 +449,8 @@
  
 
     <!-- First letter -->
-    <div class="letter-overlay" id="letterOverlay0">
-       <div class="letter-container" id="letterContainer0">
+    <div class="letter-overlay" id="letterOverlay2">
+       <div class="letter-container" id="letterContainer2">
            <button class="close-letter">×</button>
 <!--            <button class="download-btn" data-letter="0">
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
@@ -480,8 +480,8 @@
     </div>
 
     <!-- Second letter -->
-    <div class="letter-overlay" id="letterOverlay1">
-       <div class="letter-container" id="letterContainer1">
+    <div class="letter-overlay" id="letterOverlay3">
+       <div class="letter-container" id="letterContainer3">
            <button class="close-letter">×</button>
 <!--            <button class="download-btn" data-letter="1">
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
@@ -515,8 +515,8 @@
     </div>
 
     <!-- Third letter (currently active) -->
-    <div class="letter-overlay" id="letterOverlay2">
-       <div class="letter-container" id="letterContainer2">
+    <div class="letter-overlay" id="letterOverlay4">
+       <div class="letter-container" id="letterContainer4">
            <button class="close-letter">×</button>
 <!--            <button class="download-btn" data-letter="2">
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
@@ -563,8 +563,8 @@
     </div>
 
     <!-- Fourth letter -->
-    <div class="letter-overlay" id="letterOverlay3">
-       <div class="letter-container" id="letterContainer3">
+    <div class="letter-overlay" id="letterOverlay5">
+       <div class="letter-container" id="letterContainer5">
            <button class="close-letter">×</button>
 <!--            <button class="download-btn" data-letter="3">
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
@@ -606,8 +606,8 @@
     </div>
 
     <!-- Fifth letter -->
-    <div class="letter-overlay" id="letterOverlay4">
-       <div class="letter-container" id="letterContainer4">
+    <div class="letter-overlay" id="letterOverlay6">
+       <div class="letter-container" id="letterContainer6">
            <button class="close-letter">×</button>
 <!--            <button class="download-btn" data-letter="4">
                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>
@@ -644,8 +644,8 @@
 
 
 
-<div class="letter-overlay" id="letterOverlay">
-   <div class="letter-container" id="letterContainer">
+<div class="letter-overlay" id="letterOverlay7">
+   <div class="letter-container" id="letterContainer7">
        <button class="close-letter" id="closeLetter">×</button>
        
        <div class="letter-content">
@@ -801,60 +801,132 @@
         }
 
 // Function to show a specific letter
-        function showLetter(index) {
-            // Hide any currently visible letter
-            document.querySelectorAll('.letter-overlay').forEach(overlay => {
-                overlay.style.display = 'none';
-                overlay.style.opacity = '0';
-            });
+function showLetter(index) {
+    // Hide any currently visible letter
+    document.querySelectorAll('.letter-overlay').forEach(overlay => {
+        overlay.style.display = 'none';
+        overlay.style.opacity = '0';
+    });
+    
+    // Update active dot
+    document.querySelectorAll('.letter-dot').forEach((dot, i) => {
+        if (i === index) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+    
+    // Show the selected letter
+    const letterOverlay = document.getElementById(`letterOverlay${index}`);
+    const letterContainer = document.getElementById(`letterContainer${index}`);
+    
+    if (letterOverlay && letterContainer) {
+        letterOverlay.style.display = "flex";
+        
+        setTimeout(() => {
+            letterOverlay.style.opacity = "1";
+            letterContainer.style.transform = "translateY(0)";
+            letterContainer.style.opacity = "1";
             
-            // Update active dot
-            document.querySelectorAll('.letter-dot').forEach((dot, i) => {
-                if (i === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-            
-            // Show the selected letter
-            const letterOverlay = document.getElementById(`letterOverlay${index}`);
-            const letterContainer = document.getElementById(`letterContainer${index}`);
-            
-            letterOverlay.style.display = "flex";
-            
+            // Show hearts after letter appears
+            setTimeout(() => showHearts(index), 1000);
+        }, 100);
+    } else {
+        console.error(`Letter with index ${index} not found`);
+    }
+}
+
+// Function to show hearts animation
+function showHearts(letterIndex) {
+    const container = document.getElementById(`letterContainer${letterIndex}`);
+    
+    if (!container) {
+        console.error(`Container for letter ${letterIndex} not found`);
+        return;
+    }
+    
+    const colors = ["#e74c3c", "#f1a9a0", "#d64541", "#ff7979"];
+    
+    for (let i = 0; i < 15; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart-animation";
+        heart.textContent = "❤️";
+        heart.style.fontSize = Math.random() * 20 + 10 + "px";
+        heart.style.position = "absolute";
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.top = Math.random() * 100 + "%";
+        heart.style.zIndex = "5";
+        heart.style.opacity = "0";
+        heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+        heart.style.setProperty('--tx', (Math.random() * 100 - 50) + 'px');
+        heart.style.setProperty('--ty', -100 - (Math.random() * 100) + 'px');
+        
+        container.appendChild(heart);
+        
+        setTimeout(() => {
+            heart.style.animation = "floating-hearts 3s ease-out forwards";
             setTimeout(() => {
-                letterOverlay.style.opacity = "1";
-                letterContainer.style.transform = "translateY(0)";
-                letterContainer.style.opacity = "1";
-                
-                // Show hearts after letter appears
-                setTimeout(() => showHearts(index), 1000);
-            }, 100);
+                heart.remove();
+            }, 3000);
+        }, i * 300);
+    }
+}
+
+// Update letter selector dots to match total number of letters
+function updateLetterSelector() {
+    const letterSelector = document.getElementById('letterSelector');
+    const totalLetters = document.querySelectorAll('.letter-overlay').length;
+    
+    // Clear existing dots
+    letterSelector.innerHTML = '';
+    
+    // Create dots dynamically
+    for (let i = 0; i < totalLetters; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'letter-dot';
+        dot.setAttribute('data-index', i);
+        
+        // Make first dot active by default
+        if (i === 0) {
+            dot.classList.add('active');
         }
         
-        // Function to show initial animation then first letter
-        function startExperience() {
-            // First show initial animation
-            const initialAnimation = document.getElementById("initialAnimation");
-            initialAnimation.style.opacity = "1";
-            
-            setTimeout(() => {
-                initialAnimation.style.opacity = "0";
-                
-                setTimeout(() => {
-                    initialAnimation.style.display = "none";
-                    
-                    // Show letter selector
-                    const letterSelector = document.getElementById("letterSelector");
-                    letterSelector.style.opacity = "1";
-                    
-                    // Show the first letter (index 0)
-                    showLetter(0);
-                }, 500);
-            }, 2000);
-        }
+        dot.addEventListener('click', () => {
+            showLetter(i);
+        });
         
+        letterSelector.appendChild(dot);
+    }
+}
+
+// Function to show initial animation then first letter
+function startExperience() {
+    // First show initial animation
+    const initialAnimation = document.getElementById("initialAnimation");
+    initialAnimation.style.opacity = "1";
+    
+    setTimeout(() => {
+        initialAnimation.style.opacity = "0";
+        
+        setTimeout(() => {
+            initialAnimation.style.display = "none";
+            
+            // Show letter selector
+            const letterSelector = document.getElementById("letterSelector");
+            letterSelector.style.opacity = "1";
+            
+            // Update letter selector dots
+            updateLetterSelector();
+            
+            // Show the first letter (index 0)
+            showLetter(0);
+        }, 500);
+    }, 2000);
+}
+
+// Call startExperience when the page loads
+window.addEventListener('load', startExperience);
         // Add event listeners for letter dots
         document.querySelectorAll('.letter-dot').forEach(dot => {
             dot.addEventListener('click', () => {
