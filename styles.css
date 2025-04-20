@@ -1,0 +1,331 @@
+:root {
+    --background-color: #222;
+    --text-color: #333;
+    --accent-color: #e74c3c;
+    --letter-bg: #f3e9d8;
+    --letter-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    --ink-color: #2c3e50;
+    --page-turn-speed: 0.6s;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Book container */
+.book-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1500px;
+}
+
+/* Page styling */
+.page {
+    position: absolute;
+    width: 85%;
+    max-width: 400px;
+    height: 85%;
+    max-height: 80vh;
+    background-color: var(--letter-bg);
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: var(--letter-shadow);
+    overflow-y: auto;
+    transform-origin: left center;
+    transition: transform var(--page-turn-speed) ease, box-shadow var(--page-turn-speed) ease;
+    background-image: 
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 1;
+    backface-visibility: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Old paper texture */
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAMbWlDQ1BJQ0MgUHJvZmlsZQAASImVVwdYU8kWnluSkJDQAghICb0J0gkgJYQWQHoRbIQkQCgxBoKKHVlUcC2oiGBFV0UUO2BnUez2sih2XSyoDMoiKrbKNwuQXfd93/vON3f+98w5c/535sxMJgOAeifPbC6F1QDINOXJo4L9aeMS42ikZ0AHFKABHnDiCRRmVnh4KMBotv69vLsOEMneVUdR65/9f2MKwpRMASPUxmmCFEEmA3AlAJcJFPN5ADCquX3pfHMJRqyTF0qA2KYEp8h...');
+    opacity: 0.2;
+    pointer-events: none;
+    border-radius: 5px;
+    z-index: -1;
+}
+
+/* Coffee stain effect */
+.page::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    width: 100px;
+    height: 100px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJyZ2JhKDEzOSwgNjksIDIwLCAwLjA4KSIgZD0iTTUwLDUgQzcwLDUgOTAsMjUgOTAsNDUgQzkwLDcwIDcwLDk1IDUwLDk1IEMzMCw5NSAxMCw3MCAxMCw0NSBDMTAsMjUgMzAsNSA1MCw1IFoiLz48L3N2Zz4=');
+    opacity: 0.7;
+    transform: rotate(15deg);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Page that is being turned */
+.page.turning {
+    transform: rotateY(-180deg);
+    box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Hidden page */
+.page.hidden {
+    display: none;
+}
+
+/* Letter content styling */
+.letter-content {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--ink-color);
+    position: relative;
+    z-index: 2;
+    text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.1);
+    word-spacing: 2px;
+}
+
+.letter-content p {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Ink bleeding effect */
+.letter-content p::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(90deg, 
+        transparent, rgba(0,0,0,0.05) 10%, 
+        rgba(0,0,0,0.05) 90%, transparent);
+}
+
+.letter-content strong {
+    color: var(--accent-color);
+    font-weight: bold;
+    position: relative;
+}
+
+/* Underline effect for strong text */
+.letter-content strong::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--accent-color);
+    opacity: 0.3;
+}
+
+/* Signature styling */
+.signature {
+    text-align: right;
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-top: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Telugu specific text */
+.telugu-text {
+    font-family: 'Hind Guntur', sans-serif;
+    font-weight: 400;
+}
+
+/* Cover page specific styling */
+.cover-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: #f3e9d8;
+}
+
+.cover-content h1 {
+    font-family: 'Indie Flower', cursive;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #f3e9d8;
+}
+
+.heart-icon {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+}
+
+.heart-icon.small {
+    font-size: 3rem;
+}
+
+.author {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    font-style: italic;
+}
+
+/* Book cover style */
+#page-0 {
+    background: linear-gradient(45deg, #5c1c1c 0%, #843028 100%);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+#page-0::before {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMSI+PC9yZWN0Pgo8L3N2Zz4=');
+    background-size: 5px 5px;
+    opacity: 0.3;
+}
+
+#page-0::after {
+    display: none;
+}
+
+/* Back cover style */
+.back-cover {
+    background: linear-gradient(45deg, #843028 0%, #5c1c1c 100%);
+}
+
+.quote {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5rem;
+    font-style: italic;
+    max-width: 80%;
+    line-height: 1.6;
+}
+
+.ending {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+/* Page corners for navigation */
+.page-corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    bottom: 20%;
+    z-index: 1000;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.page-corner:hover {
+    opacity: 1;
+}
+
+.page-corner.left {
+    left: 20px;
+    border-radius: 0 0 100% 0;
+    background: radial-gradient(circle at top left, transparent 60%, rgba(255,255,255,0.3) 100%);
+}
+
+.page-corner.right {
+    right: 20px;
+    border-radius: 0 0 0 100%;
+    background: radial-gradient(circle at top right, transparent 60%, rgba(255,255,255,0.3) 100%);
+}
+
+/* Page number display */
+.page-number {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    z-index: 1000;
+}
+
+/* Swipe instruction */
+.swipe-instruction {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    background-color: rgba(0,0,0,0.5);
+    padding: 6px 10px;
+    border-radius: 20px;
+    max-width: 300px;
+    margin: 0 auto;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.swipe-instruction.hidden {
+    opacity: 0;
+}
+
+/* Index page styling */
+.index-page ol {
+    padding-left: 20px;
+}
+
+.index-page li {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .page {
+        padding: 25px 20px;
+        width: 90%;
+    }
+    
+    .letter-content {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .page-corner {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .cover-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .heart-icon {
+        font-size: 4rem;
+    }
+}
