@@ -12,23 +12,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const swipeInstruction = document.getElementById('swipe-instruction');
     const bookContainer = document.querySelector('.book-container');
     
-    // Create page turn container
-    const pageTurnContainer = document.createElement('div');
-    pageTurnContainer.className = 'page-turn-container';
-    bookContainer.appendChild(pageTurnContainer);
+    // Create page flip container
+    const pageFlipContainer = document.createElement('div');
+    pageFlipContainer.className = 'page-flip-container';
+    bookContainer.appendChild(pageFlipContainer);
     
-    // Create page curl indicators
-    const leftCurl = document.createElement('div');
-    leftCurl.className = 'page-curl left';
-    leftCurl.addEventListener('click', previousPage);
-    bookContainer.appendChild(leftCurl);
+    // Create page corner folds
+    const rightFold = document.createElement('div');
+    rightFold.className = 'page-fold right-bottom';
+    rightFold.addEventListener('click', nextPage);
+    bookContainer.appendChild(rightFold);
     
-    const rightCurl = document.createElement('div');
-    rightCurl.className = 'page-curl right';
-    rightCurl.addEventListener('click', nextPage);
-    bookContainer.appendChild(rightCurl);
+    const leftFold = document.createElement('div');
+    leftFold.className = 'page-fold left-bottom';
+    leftFold.addEventListener('click', previousPage);
+    bookContainer.appendChild(leftFold);
     
-    // Add page turn sound
+    // Create page turn sound
     const pageTurnSound = document.createElement('audio');
     pageTurnSound.className = 'page-turn-sound';
     pageTurnSound.innerHTML = `
@@ -77,77 +77,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup clickable index links
     function setupIndexLinks() {
-        const indexEntries = document.querySelectorAll('.index-page ol li');
-        indexEntries.forEach((entry, index) => {
+        const indexPage = document.querySelector('.index-page ol');
+        if (!indexPage) return;
+        
+        const indexItems = indexPage.querySelectorAll('li');
+        indexItems.forEach((item, index) => {
             // Add clickable class
-            entry.classList.add('index-link');
-            // Add click handler
-            entry.addEventListener('click', () => {
-                // Target page is index + 3 (cover + acknowledgement + index page)
-                const targetPage = index + 3;
-                if (targetPage !== currentPage) {
-                    goToPage(targetPage);
-                }
+            item.classList.add('index-link');
+            
+            // Add click event
+            item.addEventListener('click', () => {
+                const targetPage = index + 3; // Offset for cover, acknowledgement, index
+                goToPage(targetPage);
             });
         });
     }
     
-    // Function to go to a specific page with animation
+    // Go to specific page
     function goToPage(targetPage) {
-        if (isAnimating) return;
+        if (isAnimating || targetPage === currentPage) return;
         
         if (targetPage > currentPage) {
-            // Turn pages forward
-            turnPagesSequence(currentPage, targetPage, 'forward');
-        } else if (targetPage < currentPage) {
-            // Turn pages backward
-            turnPagesSequence(currentPage, targetPage, 'backward');
+            // Forward sequence
+            turnPagesSequence(targetPage, 'forward');
+        } else {
+            // Backward sequence
+            turnPagesSequence(targetPage, 'backward');
         }
     }
     
-    // Function to turn pages in sequence
-    function turnPagesSequence(startPage, endPage, direction) {
-        isAnimating = true;
+    // Turn pages in sequence
+    function turnPagesSequence(targetPage, direction) {
+        let sequenceRunning = true;
+        let currentSequencePage = currentPage;
         
-        // For large jumps, use a faster animation
-        const jumpSize = Math.abs(endPage - startPage);
-        const delay = jumpSize > 5 ? 300 : 600; // Faster for larger jumps
-        
-        // Set current page
-        let currentSeqPage = startPage;
-        
-        // Function to turn one page in the sequence
-        function turnOnePage() {
-            if ((direction === 'forward' && currentSeqPage < endPage) || 
-                (direction === 'backward' && currentSeqPage > endPage)) {
-                
-                // Turn the page
-                if (direction === 'forward') {
-                    turnPageWithAnimation(currentSeqPage, 'forward');
-                    currentSeqPage++;
+        function turnNextInSequence() {
+            if (sequenceRunning) {
+                if ((direction === 'forward' && currentSequencePage < targetPage) || 
+                    (direction === 'backward' && currentSequencePage > targetPage)) {
+                    
+                    if (direction === 'forward') {
+                        performPageTurn(currentSequencePage, 'right');
+                        currentSequencePage++;
+                    } else {
+                        performPageTurn(currentSequencePage, 'left');
+                        currentSequencePage--;
+                    }
+                    
+                    // Schedule next page turn
+                    setTimeout(turnNextInSequence, 600);
                 } else {
-                    turnPageWithAnimation(currentSeqPage, 'backward');
-                    currentSeqPage--;
+                    sequenceRunning = false;
+                    currentPage = targetPage;
+                    updatePageNumber();
                 }
-                
-                // Schedule next page turn
-                setTimeout(turnOnePage, delay);
-            } else {
-                // Done with sequence
-                isAnimating = false;
-                updatePageNumber();
             }
         }
         
         // Start the sequence
-        turnOnePage();
+        turnNextInSequence();
     }
     
     // Functions for navigation
     function nextPage() {
         if (isAnimating || currentPage >= totalPages - 1) return;
         
-        turnPageWithAnimation(currentPage, 'forward');
+        performPageTurn(currentPage, 'right');
         currentPage++;
         updatePageNumber();
         
@@ -158,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function previousPage() {
         if (isAnimating || currentPage <= 0) return;
         
-        turnPageWithAnimation(currentPage, 'backward');
+        performPageTurn(currentPage, 'left');
         currentPage--;
         updatePageNumber();
         
@@ -166,53 +161,86 @@ document.addEventListener('DOMContentLoaded', function() {
         playPageTurnSound();
     }
     
-    function turnPageWithAnimation(pageIndex, direction) {
+    function performPageTurn(pageIndex, direction) {
+        if (isAnimating) return;
         isAnimating = true;
         
-        // Create turning page element
-        const turningPage = document.createElement('div');
-        turningPage.className = `turning-page turning-page-${direction}`;
+        // Create page flipper elements
+        pageFlipContainer.innerHTML = '';
         
-        // Take screenshot of current page
-        const pageRect = pages[pageIndex].getBoundingClientRect();
+        const flipper = document.createElement('div');
+        flipper.className = 'page-flipper';
         
-        // Set position and size
-        turningPage.style.width = pageRect.width / 2 + 'px';
-        turningPage.style.height = pageRect.height + 'px';
+        const frontPage = document.createElement('div');
+        frontPage.className = 'page-front';
         
-        // Add to container
-        pageTurnContainer.innerHTML = '';
-        pageTurnContainer.appendChild(turningPage);
+        const backPage = document.createElement('div');
+        backPage.className = 'page-back';
         
-        // Show correct pages
-        if (direction === 'forward') {
-            // Hide current page when animation completes
-            setTimeout(() => {
-                pages[pageIndex].classList.add('hidden');
-                // Show next page
-                pages[pageIndex + 1].classList.remove('hidden');
-                // Clear animation container
-                pageTurnContainer.innerHTML = '';
-                isAnimating = false;
-            }, 1200); // Match animation duration
+        const shadow = document.createElement('div');
+        shadow.className = 'page-shadow';
+        
+        const dogEar = document.createElement('div');
+        dogEar.className = 'dog-ear';
+        
+        // Take screenshots or copy content
+        if (direction === 'right') {
+            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            
+            // Add page content if needed
+            // frontPage.textContent = pages[pageIndex].textContent;
+            // backPage.textContent = pages[pageIndex + 1].textContent;
         } else {
-            // Show previous page immediately
-            pages[pageIndex - 1].classList.remove('hidden');
-            // Hide current page when animation completes
+            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            
+            // Add page content if needed
+            // frontPage.textContent = pages[pageIndex].textContent;
+            // backPage.textContent = pages[pageIndex - 1].textContent;
+        }
+        
+        // Assemble the elements
+        flipper.appendChild(frontPage);
+        flipper.appendChild(backPage);
+        flipper.appendChild(dogEar);
+        pageFlipContainer.appendChild(flipper);
+        pageFlipContainer.appendChild(shadow);
+        
+        // Apply turning animation
+        if (direction === 'right') {
+            pageFlipContainer.classList.add('turning-right');
+            pageFlipContainer.classList.remove('turning-left');
+            
+            // Show next page behind the animation
             setTimeout(() => {
                 pages[pageIndex].classList.add('hidden');
-                // Clear animation container
-                pageTurnContainer.innerHTML = '';
-                isAnimating = false;
-            }, 1200); // Match animation duration
+                pages[pageIndex + 1].classList.remove('hidden');
+            }, 600); // Half of animation time
+        } else {
+            pageFlipContainer.classList.add('turning-left');
+            pageFlipContainer.classList.remove('turning-right');
+            
+            // Show previous page behind the animation
+            setTimeout(() => {
+                pages[pageIndex].classList.add('hidden');
+                pages[pageIndex - 1].classList.remove('hidden');
+            }, 600); // Half of animation time
         }
+        
+        // Clear animation after it completes
+        setTimeout(() => {
+            pageFlipContainer.innerHTML = '';
+            pageFlipContainer.classList.remove('turning-right', 'turning-left');
+            isAnimating = false;
+        }, 1200); // Match animation duration
     }
     
     function playPageTurnSound() {
         // Reset and play the sound
         pageTurnSound.currentTime = 0;
         pageTurnSound.play().catch(e => {
-            // Sound playback failed, likely due to user interaction requirements
+            // Sound playback may fail due to autoplay restrictions
             console.log("Sound couldn't play automatically");
         });
     }
@@ -226,17 +254,8 @@ document.addEventListener('DOMContentLoaded', function() {
             pageNumber.textContent = `${currentPage} / ${totalPages - 2}`;
         }
         
-        // Update page curl visibility
-        leftCurl.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
-        rightCurl.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
-        
-        // Update visible page
-        pages.forEach((page, index) => {
-            if (index === currentPage) {
-                page.classList.remove('hidden');
-            } else {
-                page.classList.add('hidden');
-            }
-        });
+        // Update page corner visibility
+        leftFold.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
+        rightFold.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
     }
 });
