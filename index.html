@@ -219,36 +219,45 @@
         display: none;
     }
     
-    /* Make index items clickable */
-    .index-link {
-        cursor: pointer;
-        color: var(--ink-color);
-        transition: color 0.3s ease, transform 0.2s ease;
-        display: block;
-        padding: 4px 0;
-    }
-    
-    .index-link:hover {
-        color: var(--accent-color);
-        transform: translateX(5px);
-    }
-    
-    .index-link::before {
-        content: "";
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--accent-color);
-        margin-right: 8px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        transform: translateY(-2px);
-    }
-    
-    .index-link:hover::before {
-        opacity: 1;
-    }
+    /* Make index items colorful and add underline on hover */
+.index-link {
+    cursor: pointer;
+    color: var(--accent-color); /* Always colored now, not just on hover */
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: block;
+    padding: 4px 0;
+    position: relative;
+}
+
+.index-link:hover {
+    transform: translateX(5px);
+}
+
+/* Add dot before index items */
+.index-link::before {
+    content: "•";
+    display: inline-block;
+    width: 15px;
+    color: var(--accent-color);
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+/* Add underline effect on hover */
+.index-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.index-link:hover::after {
+    width: 100%;
+}
 </style>
 
     <link href="https://fonts.googleapis.com/css2?family=Hind+Guntur:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -307,7 +316,8 @@
 
         <!-- Index page -->
 <!-- Index page with clickable items -->
-<div class="page hidden" id="page-2">
+<!-- 
+        <div class="page hidden" id="page-2">
     <div class="letter-content index-page">
         <h2>Index</h2>
         <ol>
@@ -330,6 +340,40 @@
         </ol>
     </div>
 </div>
+
+        -->
+
+
+
+        <!-- Index page with clickable items -->
+<div class="page hidden" id="page-2">
+    <div class="letter-content index-page">
+        <h2>Index</h2>
+        <ol>
+            <li>What You Mean To Me</li>
+            <li>Not Just Chatting, It Was Life</li>
+            <li>You Don't Ever Have To Be Alone</li>
+            <li>The Moment Everything Changed</li>
+            <li>The Ring</li>
+            <li>Our Little Secret</li>
+            <li>Truth or Dare</li>
+            <li>To Be Transparent</li>
+            <li>My Way of Showing Gratitude</li>
+            <li>The Divine Play</li>
+            <li>A Letter In Telugu</li>
+            <li>A Woman Who Lives In My Soul</li>
+            <li>Our Silent, Secret Love</li>
+            <li>If You Stood In Front Of Me</li>
+            <li>The Only Name My Heart Remembers</li>
+            <li>Your Certified Panikimalinodu /li>
+            <li>Soul Support System</li>
+            <li>This Is Not Your Fault</li>
+        </ol>
+    </div>
+</div>
+
+
+        
         <!-- Letter 0 -->
         <div class="page hidden" id="page-3">
             <div class="letter-content">
