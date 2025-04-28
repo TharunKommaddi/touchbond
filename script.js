@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variables
     let currentPage = 0;
-   const totalPages = 22; // Total number of pages (1 cover + 1 acknowledgement + 1 index + 18 letters + 1 back cover)
+   const totalPages = 24; // Total number of pages (1 cover + 1 acknowledgement + 1 index + 18 letters + 1 back cover)
     //const totalPages = document.querySelectorAll('.page').length;
     let isAnimating = false;
     
