@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variables
     let currentPage = 0;
-    const totalPages = 23; // Updated to match actual number of pages
+    const totalPages = 23; // Fixed: Updated to match actual number of pages (0-22)
+    // const totalPages = 27; // Original commented - was causing out of bounds errors
+    // const totalPages = document.querySelectorAll('.page').length; // Alternative method commented
     let isAnimating = false;
     
     // Elements
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     bookContainer.appendChild(pageTurnSound);
     
-    // Initialize - Show first page and hide all others
+    // Initialize - Fixed: Show first page properly and hide all others
     showPage(0);
     updatePageNumber();
     setupIndexLinks();
@@ -76,8 +78,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Function to show specific page and hide others
+    // Fixed: Function to show specific page and hide others properly
     function showPage(pageIndex) {
+        // Validate page index bounds
+        if (pageIndex < 0 || pageIndex >= totalPages) {
+            console.warn(`Invalid page index: ${pageIndex}`);
+            return;
+        }
+        
         pages.forEach((page, index) => {
             if (index === pageIndex) {
                 page.classList.remove('hidden');
@@ -98,31 +106,41 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add clickable class
             item.classList.add('index-link');
             
-            // Add click event
+            // Fixed: Add click event with proper bounds checking
             item.addEventListener('click', (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Prevent default link behavior
                 const targetPage = index + 3; // Offset for cover, acknowledgement, index
-                if (targetPage < totalPages) {
+                
+                // Fixed: Add bounds checking for target page
+                if (targetPage >= 0 && targetPage < totalPages) {
                     goToPage(targetPage);
+                } else {
+                    console.warn(`Target page ${targetPage} is out of bounds`);
                 }
             });
         });
     }
     
-    // Go to specific page with smooth transition
+    // Fixed: Go to specific page with improved logic
     function goToPage(targetPage) {
+        // Fixed: Better validation and animation handling
         if (isAnimating || targetPage === currentPage || targetPage < 0 || targetPage >= totalPages) {
             return;
         }
         
-        // For large jumps (like from index), do immediate transition
-        if (Math.abs(targetPage - currentPage) > 3) {
+        // For large jumps (like from index), do immediate transition to prevent getting stuck
+        const jumpDistance = Math.abs(targetPage - currentPage);
+        if (jumpDistance > 3) {
             isAnimating = true;
+            
+            // Show target page immediately for large jumps
             showPage(targetPage);
             updatePageNumber();
             
-            // Small delay to prevent rapid clicking
+            // Add a brief animation effect
+            pageFlipContainer.classList.add('quick-transition');
             setTimeout(() => {
+                pageFlipContainer.classList.remove('quick-transition');
                 isAnimating = false;
             }, 300);
         } else {
@@ -135,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Turn pages in sequence
+    // Turn pages in sequence - Fixed animation and timing issues
     function turnPagesSequence(targetPage, direction) {
         if (isAnimating) return;
         
@@ -144,7 +162,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentSequencePage = currentPage;
         
         function turnNextInSequence() {
-            if (!sequenceRunning) return;
+            if (!sequenceRunning) {
+                isAnimating = false;
+                return;
+            }
             
             if ((direction === 'forward' && currentSequencePage < targetPage) || 
                 (direction === 'backward' && currentSequencePage > targetPage)) {
@@ -157,15 +178,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentSequencePage--;
                 }
                 
-                // Update current page
-                showPage(currentSequencePage);
-                updatePageNumber();
+                // Fixed: Update page display and current page properly
+                setTimeout(() => {
+                    showPage(currentSequencePage);
+                    updatePageNumber();
+                }, 300); // Half of animation time
                 
-                // Schedule next page turn
-                setTimeout(turnNextInSequence, 400);
+                // Schedule next page turn - Fixed timing
+                setTimeout(turnNextInSequence, 600);
             } else {
                 sequenceRunning = false;
                 isAnimating = false;
+                // Final update
+                showPage(targetPage);
+                updatePageNumber();
             }
         }
         
@@ -173,19 +199,24 @@ document.addEventListener('DOMContentLoaded', function() {
         turnNextInSequence();
     }
     
-    // Functions for navigation
+    // Functions for navigation - Fixed timing and page display
     function nextPage() {
         if (isAnimating || currentPage >= totalPages - 1) return;
         
         isAnimating = true;
         performPageTurn(currentPage, 'right');
         
+        // Fixed: Update page after animation starts
         setTimeout(() => {
             showPage(currentPage + 1);
             updatePageNumber();
             playPageTurnSound();
+        }, 300); // Half of animation duration
+        
+        // Fixed: Reset animation flag after full animation
+        setTimeout(() => {
             isAnimating = false;
-        }, 300);
+        }, 600);
     }
     
     function previousPage() {
@@ -194,14 +225,20 @@ document.addEventListener('DOMContentLoaded', function() {
         isAnimating = true;
         performPageTurn(currentPage, 'left');
         
+        // Fixed: Update page after animation starts
         setTimeout(() => {
             showPage(currentPage - 1);
             updatePageNumber();
             playPageTurnSound();
+        }, 300); // Half of animation duration
+        
+        // Fixed: Reset animation flag after full animation
+        setTimeout(() => {
             isAnimating = false;
-        }, 300);
+        }, 600);
     }
     
+    // Fixed: Improved page turn animation
     function performPageTurn(pageIndex, direction) {
         // Create page flipper elements
         pageFlipContainer.innerHTML = '';
@@ -221,6 +258,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const dogEar = document.createElement('div');
         dogEar.className = 'dog-ear';
         
+        // Fixed: Better page content handling for animation
+        if (direction === 'right') {
+            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            
+            // Add page content if needed - commented for performance
+            // frontPage.textContent = pages[pageIndex] ? pages[pageIndex].textContent : '';
+            // backPage.textContent = pages[pageIndex + 1] ? pages[pageIndex + 1].textContent : '';
+        } else {
+            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
+            
+            // Add page content if needed - commented for performance
+            // frontPage.textContent = pages[pageIndex] ? pages[pageIndex].textContent : '';
+            // backPage.textContent = pages[pageIndex - 1] ? pages[pageIndex - 1].textContent : '';
+        }
+        
         // Assemble the elements
         flipper.appendChild(frontPage);
         flipper.appendChild(backPage);
@@ -232,16 +286,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (direction === 'right') {
             pageFlipContainer.classList.add('turning-right');
             pageFlipContainer.classList.remove('turning-left');
+            
+            // Fixed: Show next page behind the animation - commented original approach
+            // setTimeout(() => {
+            //     pages[pageIndex].classList.add('hidden');
+            //     pages[pageIndex + 1].classList.remove('hidden');
+            // }, 600); // Half of animation time
         } else {
             pageFlipContainer.classList.add('turning-left');
             pageFlipContainer.classList.remove('turning-right');
+            
+            // Fixed: Show previous page behind the animation - commented original approach
+            // setTimeout(() => {
+            //     pages[pageIndex].classList.add('hidden');
+            //     pages[pageIndex - 1].classList.remove('hidden');
+            // }, 600); // Half of animation time
         }
         
         // Clear animation after it completes
         setTimeout(() => {
             pageFlipContainer.innerHTML = '';
             pageFlipContainer.classList.remove('turning-right', 'turning-left');
-        }, 1200);
+        }, 1200); // Match animation duration
     }
     
     function playPageTurnSound() {
@@ -253,6 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Fixed: Improved page number display and corner visibility
     function updatePageNumber() {
         // Don't show page number on cover or back cover
         if (currentPage === 0 || currentPage === totalPages - 1) {
@@ -262,8 +329,39 @@ document.addEventListener('DOMContentLoaded', function() {
             pageNumber.textContent = `${currentPage} / ${totalPages - 2}`;
         }
         
-        // Update page corner visibility
-        if (leftFold) leftFold.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
-        if (rightFold) rightFold.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
+        // Fixed: Update page corner visibility with null checks
+        if (leftFold) {
+            leftFold.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
+        }
+        if (rightFold) {
+            rightFold.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
+        }
+        
+        // Update prevCorner and nextCorner if they exist (original code compatibility)
+        if (prevCorner) {
+            prevCorner.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
+        }
+        if (nextCorner) {
+            nextCorner.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
+        }
     }
+    
+    // Debug function - can be called from console
+    window.debugBook = function() {
+        console.log('Debug Info:');
+        console.log('Current Page:', currentPage);
+        console.log('Total Pages:', totalPages);
+        console.log('Is Animating:', isAnimating);
+        console.log('Pages found:', pages.length);
+        console.log('Visible pages:', Array.from(pages).filter(p => !p.classList.contains('hidden')).length);
+    };
+    
+    // Additional safety check - ensure only one page is visible on load
+    setTimeout(() => {
+        let visiblePages = Array.from(pages).filter(p => !p.classList.contains('hidden'));
+        if (visiblePages.length > 1) {
+            console.warn('Multiple pages visible, fixing...');
+            showPage(currentPage);
+        }
+    }, 100);
 });
