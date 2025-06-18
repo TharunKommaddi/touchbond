@@ -11,7 +11,7 @@
 body, html {
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     width: 100%;
     height: 100%;
     background-color: var(--background-color);
@@ -99,7 +99,7 @@ body, html {
 
 /* Letter content styling */
 .letter-content {
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 1.2rem;
     line-height: 1.8;
     color: var(--ink-color);
@@ -148,7 +148,7 @@ body, html {
 /* Signature styling */
 .signature {
     text-align: right;
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 1.5rem;
     color: var(--accent-color);
     margin-top: 30px;
@@ -158,7 +158,7 @@ body, html {
 
 /* Telugu specific text */
 .telugu-text {
-    font-family: 'Hind Guntur', sans-serif;
+    font-family: 'Hind Guntur', 'Noto Sans Telugu', sans-serif; /* FIXED: Added fallback fonts */
     font-weight: 400;
 }
 
@@ -174,7 +174,7 @@ body, html {
 }
 
 .cover-content h1 {
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 3rem;
     margin-bottom: 2rem;
     color: #f3e9d8;
@@ -190,7 +190,7 @@ body, html {
 }
 
 .author {
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 1.5rem;
     margin-top: 2rem;
     font-style: italic;
@@ -218,7 +218,7 @@ body, html {
 }
 
 .quote {
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 1.5rem;
     font-style: italic;
     max-width: 80%;
@@ -226,12 +226,12 @@ body, html {
 }
 
 .ending {
-    font-family: 'Indie Flower', cursive;
+    font-family: 'Indie Flower', 'Comic Sans MS', cursive, sans-serif; /* FIXED: Added fallback fonts */
     font-size: 1.2rem;
     margin-top: 2rem;
 }
 
-/* Page corners for navigation */
+/* FIXED: Updated page corners for navigation - unified styling */
 .page-corner {
     position: absolute;
     width: 60px;
@@ -304,6 +304,69 @@ body, html {
     position: relative;
 }
 
+/* FIXED: Improved index link styling */
+.index-link {
+    cursor: pointer;
+    color: var(--accent-color);
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: block;
+    padding: 4px 0;
+    position: relative;
+}
+
+.index-link:hover {
+    transform: translateX(5px);
+    color: #c0392b; /* Slightly darker on hover */
+}
+
+/* Add dot before index items */
+.index-link::before {
+    content: "•";
+    display: inline-block;
+    width: 15px;
+    color: var(--accent-color);
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+/* Add underline effect on hover */
+.index-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.index-link:hover::after {
+    width: 100%;
+}
+
+/* FIXED: Added loading state for better UX */
+.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* FIXED: Better animation handling */
+.animating {
+    pointer-events: none;
+}
+
+/* FIXED: Smooth transition for quick page jumps */
+.quick-transition {
+    transition: opacity 0.3s ease;
+}
+
+/* FIXED: Better error handling visual cues */
+.error-state {
+    border: 2px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
 /* Mobile optimization */
 @media (max-width: 768px) {
     .page {
@@ -328,4 +391,35 @@ body, html {
     .heart-icon {
         font-size: 4rem;
     }
+    
+    /* FIXED: Better mobile touch targets */
+    .index-link {
+        padding: 8px 0;
+        font-size: 1.1rem;
+    }
+    
+    /* FIXED: Improved mobile swipe area */
+    .swipe-instruction {
+        bottom: 40px;
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+}
+
+/* FIXED: Add focus states for accessibility */
+.page-corner:focus,
+.index-link:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* FIXED: Smooth font loading */
+@font-face {
+    font-family: 'Indie Flower';
+    font-display: swap; /* Better font loading performance */
+}
+
+@font-face {
+    font-family: 'Hind Guntur';
+    font-display: swap; /* Better font loading performance */
 }
