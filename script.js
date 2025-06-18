@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variables
     let currentPage = 0;
-   const totalPages = 27; // Total number of pages (1 cover + 1 acknowledgement + 1 index + 18 letters + 1 back cover)
-    //const totalPages = document.querySelectorAll('.page').length;
+    const totalPages = 23; // Updated to match actual number of pages
     let isAnimating = false;
     
     // Elements
@@ -37,7 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     bookContainer.appendChild(pageTurnSound);
     
-    // Initialize
+    // Initialize - Show first page and hide all others
+    showPage(0);
     updatePageNumber();
     setupIndexLinks();
     
@@ -76,6 +76,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Function to show specific page and hide others
+    function showPage(pageIndex) {
+        pages.forEach((page, index) => {
+            if (index === pageIndex) {
+                page.classList.remove('hidden');
+            } else {
+                page.classList.add('hidden');
+            }
+        });
+        currentPage = pageIndex;
+    }
+    
     // Setup clickable index links
     function setupIndexLinks() {
         const indexPage = document.querySelector('.index-page ol');
@@ -87,51 +99,73 @@ document.addEventListener('DOMContentLoaded', function() {
             item.classList.add('index-link');
             
             // Add click event
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
                 const targetPage = index + 3; // Offset for cover, acknowledgement, index
-                goToPage(targetPage);
+                if (targetPage < totalPages) {
+                    goToPage(targetPage);
+                }
             });
         });
     }
     
-    // Go to specific page
+    // Go to specific page with smooth transition
     function goToPage(targetPage) {
-        if (isAnimating || targetPage === currentPage) return;
+        if (isAnimating || targetPage === currentPage || targetPage < 0 || targetPage >= totalPages) {
+            return;
+        }
         
-        if (targetPage > currentPage) {
-            // Forward sequence
-            turnPagesSequence(targetPage, 'forward');
+        // For large jumps (like from index), do immediate transition
+        if (Math.abs(targetPage - currentPage) > 3) {
+            isAnimating = true;
+            showPage(targetPage);
+            updatePageNumber();
+            
+            // Small delay to prevent rapid clicking
+            setTimeout(() => {
+                isAnimating = false;
+            }, 300);
         } else {
-            // Backward sequence
-            turnPagesSequence(targetPage, 'backward');
+            // For small jumps, use sequential page turns
+            if (targetPage > currentPage) {
+                turnPagesSequence(targetPage, 'forward');
+            } else {
+                turnPagesSequence(targetPage, 'backward');
+            }
         }
     }
     
     // Turn pages in sequence
     function turnPagesSequence(targetPage, direction) {
+        if (isAnimating) return;
+        
+        isAnimating = true;
         let sequenceRunning = true;
         let currentSequencePage = currentPage;
         
         function turnNextInSequence() {
-            if (sequenceRunning) {
-                if ((direction === 'forward' && currentSequencePage < targetPage) || 
-                    (direction === 'backward' && currentSequencePage > targetPage)) {
-                    
-                    if (direction === 'forward') {
-                        performPageTurn(currentSequencePage, 'right');
-                        currentSequencePage++;
-                    } else {
-                        performPageTurn(currentSequencePage, 'left');
-                        currentSequencePage--;
-                    }
-                    
-                    // Schedule next page turn
-                    setTimeout(turnNextInSequence, 600);
+            if (!sequenceRunning) return;
+            
+            if ((direction === 'forward' && currentSequencePage < targetPage) || 
+                (direction === 'backward' && currentSequencePage > targetPage)) {
+                
+                if (direction === 'forward') {
+                    performPageTurn(currentSequencePage, 'right');
+                    currentSequencePage++;
                 } else {
-                    sequenceRunning = false;
-                    currentPage = targetPage;
-                    updatePageNumber();
+                    performPageTurn(currentSequencePage, 'left');
+                    currentSequencePage--;
                 }
+                
+                // Update current page
+                showPage(currentSequencePage);
+                updatePageNumber();
+                
+                // Schedule next page turn
+                setTimeout(turnNextInSequence, 400);
+            } else {
+                sequenceRunning = false;
+                isAnimating = false;
             }
         }
         
@@ -143,29 +177,32 @@ document.addEventListener('DOMContentLoaded', function() {
     function nextPage() {
         if (isAnimating || currentPage >= totalPages - 1) return;
         
+        isAnimating = true;
         performPageTurn(currentPage, 'right');
-        currentPage++;
-        updatePageNumber();
         
-        // Play sound
-        playPageTurnSound();
+        setTimeout(() => {
+            showPage(currentPage + 1);
+            updatePageNumber();
+            playPageTurnSound();
+            isAnimating = false;
+        }, 300);
     }
     
     function previousPage() {
         if (isAnimating || currentPage <= 0) return;
         
+        isAnimating = true;
         performPageTurn(currentPage, 'left');
-        currentPage--;
-        updatePageNumber();
         
-        // Play sound
-        playPageTurnSound();
+        setTimeout(() => {
+            showPage(currentPage - 1);
+            updatePageNumber();
+            playPageTurnSound();
+            isAnimating = false;
+        }, 300);
     }
     
     function performPageTurn(pageIndex, direction) {
-        if (isAnimating) return;
-        isAnimating = true;
-        
         // Create page flipper elements
         pageFlipContainer.innerHTML = '';
         
@@ -184,23 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const dogEar = document.createElement('div');
         dogEar.className = 'dog-ear';
         
-        // Take screenshots or copy content
-        if (direction === 'right') {
-            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
-            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
-            
-            // Add page content if needed
-            // frontPage.textContent = pages[pageIndex].textContent;
-            // backPage.textContent = pages[pageIndex + 1].textContent;
-        } else {
-            frontPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
-            backPage.style.backgroundImage = `url('data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="#f3e9d8" /></svg>')}')`;
-            
-            // Add page content if needed
-            // frontPage.textContent = pages[pageIndex].textContent;
-            // backPage.textContent = pages[pageIndex - 1].textContent;
-        }
-        
         // Assemble the elements
         flipper.appendChild(frontPage);
         flipper.appendChild(backPage);
@@ -212,29 +232,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (direction === 'right') {
             pageFlipContainer.classList.add('turning-right');
             pageFlipContainer.classList.remove('turning-left');
-            
-            // Show next page behind the animation
-            setTimeout(() => {
-                pages[pageIndex].classList.add('hidden');
-                pages[pageIndex + 1].classList.remove('hidden');
-            }, 600); // Half of animation time
         } else {
             pageFlipContainer.classList.add('turning-left');
             pageFlipContainer.classList.remove('turning-right');
-            
-            // Show previous page behind the animation
-            setTimeout(() => {
-                pages[pageIndex].classList.add('hidden');
-                pages[pageIndex - 1].classList.remove('hidden');
-            }, 600); // Half of animation time
         }
         
         // Clear animation after it completes
         setTimeout(() => {
             pageFlipContainer.innerHTML = '';
             pageFlipContainer.classList.remove('turning-right', 'turning-left');
-            isAnimating = false;
-        }, 1200); // Match animation duration
+        }, 1200);
     }
     
     function playPageTurnSound() {
@@ -256,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Update page corner visibility
-        leftFold.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
-        rightFold.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
+        if (leftFold) leftFold.style.visibility = currentPage > 0 ? 'visible' : 'hidden';
+        if (rightFold) rightFold.style.visibility = currentPage < totalPages - 1 ? 'visible' : 'hidden';
     }
 });
